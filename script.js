@@ -1,409 +1,541 @@
-/* =========================================
+/* =========================================================
    PORTFOLIO JAVASCRIPT
-   Hamad Ahmad Ghalib
-========================================= */
+   Hammad Ahmad Ghalib
+========================================================= */
 
 
-/* =========================================
-   DOM ELEMENTS
-========================================= */
+/* =========================================================
+   DOM READY
+========================================================= */
 
-const body = document.body;
-
-const themeToggle = document.getElementById("themeToggle");
-
-const menuToggle = document.getElementById("menuToggle");
-
-const navMenu = document.querySelector(".nav-menu");
-
-const navLinks = document.querySelectorAll(".nav-link");
-
-const typingText = document.getElementById("typingText");
-
-const scrollProgress = document.querySelector(".scroll-progress");
-
-const backToTop = document.getElementById("backToTop");
-
-const currentYear = document.getElementById("currentYear");
-
-const contactForm = document.getElementById("contactForm");
-
-const submitButton = document.getElementById("submitButton");
-
-const formStatus = document.getElementById("formStatus");
-
-const cursorGlow = document.querySelector(".cursor-glow");
+document.addEventListener("DOMContentLoaded", () => {
 
 
-/* =========================================
-   CURRENT YEAR
-========================================= */
+    /* =====================================================
+       CURRENT YEAR
+    ===================================================== */
 
-if (currentYear) {
-    currentYear.textContent = new Date().getFullYear();
-}
+    const currentYear = document.getElementById("currentYear");
 
+    if (currentYear) {
 
-/* =========================================
-   MOBILE MENU
-========================================= */
+        currentYear.textContent =
+            new Date().getFullYear();
 
-if (menuToggle && navMenu) {
-
-    menuToggle.addEventListener("click", () => {
-
-        navMenu.classList.toggle("open");
-
-        const isOpen = navMenu.classList.contains("open");
-
-        menuToggle.setAttribute(
-            "aria-label",
-            isOpen ? "Close navigation" : "Open navigation"
-        );
-
-    });
-
-
-    navLinks.forEach((link) => {
-
-        link.addEventListener("click", () => {
-
-            navMenu.classList.remove("open");
-
-            menuToggle.setAttribute(
-                "aria-label",
-                "Open navigation"
-            );
-
-        });
-
-    });
-
-}
-
-
-/* =========================================
-   THEME TOGGLE
-========================================= */
-
-const savedTheme = localStorage.getItem("portfolio-theme");
-
-if (savedTheme === "light") {
-
-    body.classList.add("light-mode");
-
-    if (themeToggle) {
-        themeToggle.innerHTML =
-            '<i class="fa-solid fa-sun"></i>';
     }
 
-}
 
 
-if (themeToggle) {
+    /* =====================================================
+       THEME TOGGLE
+    ===================================================== */
 
-    themeToggle.addEventListener("click", () => {
+    const themeToggle =
+        document.getElementById("themeToggle");
 
-        body.classList.toggle("light-mode");
+    if (themeToggle) {
 
-        const isLight = body.classList.contains("light-mode");
-
-        localStorage.setItem(
-            "portfolio-theme",
-            isLight ? "light" : "dark"
-        );
-
-        themeToggle.innerHTML = isLight
-            ? '<i class="fa-solid fa-sun"></i>'
-            : '<i class="fa-solid fa-moon"></i>';
-
-    });
-
-}
+        const themeIcon =
+            themeToggle.querySelector("i");
 
 
-/* =========================================
-   TYPING EFFECT
-========================================= */
-
-const roles = [
-    "Web Developer",
-    "Software Engineering Student",
-    "Frontend Developer",
-    "Problem Solver"
-];
-
-let roleIndex = 0;
-
-let characterIndex = 0;
-
-let deleting = false;
+        const savedTheme =
+            localStorage.getItem("portfolio-theme");
 
 
-function typeRole() {
+        if (savedTheme === "light") {
 
-    if (!typingText) return;
+            document.body.classList.add(
+                "light-theme"
+            );
 
-    const currentRole = roles[roleIndex];
+            if (themeIcon) {
 
-    if (!deleting) {
+                themeIcon.className =
+                    "fa-solid fa-sun";
 
-        typingText.textContent =
-            currentRole.substring(0, characterIndex + 1);
+            }
 
-        characterIndex++;
+        } else {
 
-        if (characterIndex === currentRole.length) {
+            document.body.classList.remove(
+                "light-theme"
+            );
 
-            deleting = true;
+            if (themeIcon) {
 
-            setTimeout(typeRole, 1800);
+                themeIcon.className =
+                    "fa-solid fa-moon";
 
-            return;
-        }
-
-    } else {
-
-        typingText.textContent =
-            currentRole.substring(0, characterIndex - 1);
-
-        characterIndex--;
-
-        if (characterIndex === 0) {
-
-            deleting = false;
-
-            roleIndex++;
-
-            if (roleIndex >= roles.length) {
-                roleIndex = 0;
             }
 
         }
 
-    }
 
-    setTimeout(
-        typeRole,
-        deleting ? 45 : 90
-    );
-}
+        themeToggle.addEventListener(
+            "click",
+            () => {
 
-typeRole();
-
-
-/* =========================================
-   SCROLL PROGRESS
-========================================= */
-
-function updateScrollProgress() {
-
-    if (!scrollProgress) return;
-
-    const scrollTop =
-        window.scrollY;
-
-    const documentHeight =
-        document.documentElement.scrollHeight -
-        window.innerHeight;
-
-    const progress =
-        documentHeight > 0
-            ? (scrollTop / documentHeight) * 100
-            : 0;
-
-    scrollProgress.style.width =
-        `${progress}%`;
-}
-
-window.addEventListener(
-    "scroll",
-    updateScrollProgress,
-    { passive: true }
-);
+                document.body.classList.toggle(
+                    "light-theme"
+                );
 
 
-/* =========================================
-   ACTIVE NAV LINK
-========================================= */
-
-const sections =
-    document.querySelectorAll("section[id]");
+                const isLight =
+                    document.body.classList.contains(
+                        "light-theme"
+                    );
 
 
-function updateActiveNav() {
+                localStorage.setItem(
+                    "portfolio-theme",
+                    isLight
+                        ? "light"
+                        : "dark"
+                );
 
-    const scrollPosition =
-        window.scrollY + 200;
 
-    sections.forEach((section) => {
+                if (themeIcon) {
 
-        const sectionTop =
-            section.offsetTop;
-
-        const sectionHeight =
-            section.offsetHeight;
-
-        const sectionId =
-            section.getAttribute("id");
-
-        if (
-            scrollPosition >= sectionTop &&
-            scrollPosition < sectionTop + sectionHeight
-        ) {
-
-            navLinks.forEach((link) => {
-
-                link.classList.remove("active");
-
-                if (
-                    link.getAttribute("href") ===
-                    `#${sectionId}`
-                ) {
-
-                    link.classList.add("active");
+                    themeIcon.className =
+                        isLight
+                            ? "fa-solid fa-sun"
+                            : "fa-solid fa-moon";
 
                 }
 
-            });
+            }
+        );
 
-        }
-
-    });
-
-}
-
-window.addEventListener(
-    "scroll",
-    updateActiveNav,
-    { passive: true }
-);
+    }
 
 
-/* =========================================
-   SCROLL REVEAL
-========================================= */
 
-const revealElements =
-    document.querySelectorAll(".reveal");
+    /* =====================================================
+       MOBILE MENU
+    ===================================================== */
+
+    const menuToggle =
+        document.getElementById("menuToggle");
+
+    const navMenu =
+        document.getElementById("navMenu");
 
 
-const revealObserver =
-    new IntersectionObserver(
-        (entries, observer) => {
+    if (menuToggle && navMenu) {
 
-            entries.forEach((entry) => {
+        menuToggle.addEventListener(
+            "click",
+            () => {
 
-                if (entry.isIntersecting) {
+                navMenu.classList.toggle(
+                    "open"
+                );
 
-                    entry.target.classList.add("visible");
+            }
+        );
 
-                    observer.unobserve(
-                        entry.target
+
+        const navLinks =
+            navMenu.querySelectorAll(
+                ".nav-link"
+            );
+
+
+        navLinks.forEach((link) => {
+
+            link.addEventListener(
+                "click",
+                () => {
+
+                    navMenu.classList.remove(
+                        "open"
                     );
 
                 }
+            );
 
-            });
+        });
 
-        },
-        {
-            threshold: 0.12
+    }
+
+
+
+    /* =====================================================
+       TYPING EFFECT
+    ===================================================== */
+
+    const typingText =
+        document.getElementById("typingText");
+
+
+    if (typingText) {
+
+        const words = [
+            "Web Developer",
+            "App Developer",
+            "Frontend Developer",
+            "Full Stack Developer",
+            "UI Developer"
+        ];
+
+
+        let wordIndex = 0;
+        let charIndex = 0;
+        let deleting = false;
+
+
+        const typeSpeed = 90;
+        const deleteSpeed = 50;
+        const pauseAfterWord = 1500;
+
+
+        function typeEffect() {
+
+            const currentWord =
+                words[wordIndex];
+
+
+            if (!deleting) {
+
+                typingText.textContent =
+                    currentWord.substring(
+                        0,
+                        charIndex + 1
+                    );
+
+                charIndex++;
+
+
+                if (
+                    charIndex ===
+                    currentWord.length
+                ) {
+
+                    deleting = true;
+
+                    setTimeout(
+                        typeEffect,
+                        pauseAfterWord
+                    );
+
+                    return;
+
+                }
+
+            } else {
+
+                typingText.textContent =
+                    currentWord.substring(
+                        0,
+                        charIndex - 1
+                    );
+
+                charIndex--;
+
+
+                if (charIndex === 0) {
+
+                    deleting = false;
+
+                    wordIndex =
+                        (wordIndex + 1) %
+                        words.length;
+
+                }
+
+            }
+
+
+            setTimeout(
+                typeEffect,
+                deleting
+                    ? deleteSpeed
+                    : typeSpeed
+            );
+
         }
+
+
+        typeEffect();
+
+    }
+
+
+
+    /* =====================================================
+       SCROLL PROGRESS
+    ===================================================== */
+
+    const scrollProgress =
+        document.getElementById(
+            "scrollProgress"
+        );
+
+
+    function updateScrollProgress() {
+
+        if (!scrollProgress) {
+            return;
+        }
+
+
+        const scrollTop =
+            window.scrollY;
+
+
+        const documentHeight =
+            document.documentElement
+                .scrollHeight -
+            window.innerHeight;
+
+
+        const percentage =
+            documentHeight > 0
+                ? (scrollTop / documentHeight) * 100
+                : 0;
+
+
+        scrollProgress.style.width =
+            `${percentage}%`;
+
+    }
+
+
+    window.addEventListener(
+        "scroll",
+        updateScrollProgress,
+        { passive: true }
     );
 
 
-revealElements.forEach((element) => {
-
-    revealObserver.observe(element);
-
-});
+    updateScrollProgress();
 
 
-/* =========================================
-   BACK TO TOP
-========================================= */
 
-window.addEventListener(
-    "scroll",
-    () => {
+    /* =====================================================
+       ACTIVE NAVIGATION
+    ===================================================== */
 
-        if (!backToTop) return;
+    const sections =
+        document.querySelectorAll(
+            "section[id]"
+        );
 
-        if (window.scrollY > 600) {
+    const navLinks =
+        document.querySelectorAll(
+            ".nav-link"
+        );
 
-            backToTop.classList.add("show");
+
+    function updateActiveNav() {
+
+        let currentSection = "";
+
+
+        sections.forEach((section) => {
+
+            const sectionTop =
+                section.offsetTop - 180;
+
+
+            if (
+                window.scrollY >=
+                sectionTop
+            ) {
+
+                currentSection =
+                    section.getAttribute(
+                        "id"
+                    );
+
+            }
+
+        });
+
+
+        navLinks.forEach((link) => {
+
+            link.classList.remove(
+                "active"
+            );
+
+
+            const href =
+                link.getAttribute("href");
+
+
+            if (
+                href ===
+                `#${currentSection}`
+            ) {
+
+                link.classList.add(
+                    "active"
+                );
+
+            }
+
+        });
+
+    }
+
+
+    window.addEventListener(
+        "scroll",
+        updateActiveNav,
+        { passive: true }
+    );
+
+
+    updateActiveNav();
+
+
+
+    /* =====================================================
+       NAVBAR SCROLL
+    ===================================================== */
+
+    const navbar =
+        document.getElementById(
+            "navbar"
+        );
+
+
+    function updateNavbar() {
+
+        if (!navbar) {
+            return;
+        }
+
+
+        if (window.scrollY > 30) {
+
+            navbar.style.boxShadow =
+                "0 10px 35px rgba(0,0,0,0.08)";
 
         } else {
 
-            backToTop.classList.remove("show");
+            navbar.style.boxShadow =
+                "none";
 
         }
 
-    },
-    { passive: true }
-);
+    }
 
-
-if (backToTop) {
-
-    backToTop.addEventListener(
-        "click",
-        () => {
-
-            window.scrollTo({
-                top: 0,
-                behavior: "smooth"
-            });
-
-        }
-    );
-
-}
-
-
-/* =========================================
-   CURSOR GLOW
-========================================= */
-
-if (cursorGlow && window.matchMedia("(pointer: fine)").matches) {
 
     window.addEventListener(
-        "mousemove",
-        (event) => {
-
-            cursorGlow.style.left =
-                `${event.clientX}px`;
-
-            cursorGlow.style.top =
-                `${event.clientY}px`;
-
-            cursorGlow.style.opacity = "1";
-
-        }
+        "scroll",
+        updateNavbar,
+        { passive: true }
     );
 
-    document.addEventListener(
-        "mouseleave",
-        () => {
 
-            cursorGlow.style.opacity = "0";
-
-        }
-    );
-
-}
+    updateNavbar();
 
 
-/* =========================================
-   PROJECT CARD 3D EFFECT
-========================================= */
 
-const projectCards =
-    document.querySelectorAll(".project-card");
+    /* =====================================================
+       REVEAL ANIMATION
+    ===================================================== */
+
+    const revealElements =
+        document.querySelectorAll(
+            ".section, .skill-card, .project-card, .info-box, .contact-detail, .contact-form"
+        );
 
 
-if (window.matchMedia("(pointer: fine)").matches) {
+    revealElements.forEach((element) => {
+
+        element.classList.add(
+            "reveal"
+        );
+
+    });
+
+
+    const revealObserver =
+        new IntersectionObserver(
+            (entries, observer) => {
+
+                entries.forEach((entry) => {
+
+                    if (
+                        entry.isIntersecting
+                    ) {
+
+                        entry.target.classList.add(
+                            "visible"
+                        );
+
+                        observer.unobserve(
+                            entry.target
+                        );
+
+                    }
+
+                });
+
+            },
+            {
+                threshold: 0.08
+            }
+        );
+
+
+    revealElements.forEach((element) => {
+
+        revealObserver.observe(
+            element
+        );
+
+    });
+
+
+
+    /* =====================================================
+       CURSOR GLOW
+    ===================================================== */
+
+    const cursorGlow =
+        document.getElementById(
+            "cursorGlow"
+        );
+
+
+    if (
+        cursorGlow &&
+        window.matchMedia(
+            "(pointer: fine)"
+        ).matches
+    ) {
+
+        window.addEventListener(
+            "mousemove",
+            (event) => {
+
+                cursorGlow.style.left =
+                    `${event.clientX}px`;
+
+                cursorGlow.style.top =
+                    `${event.clientY}px`;
+
+            }
+        );
+
+    }
+
+
+
+    /* =====================================================
+       PROJECT CARD TILT
+    ===================================================== */
+
+    const projectCards =
+        document.querySelectorAll(
+            ".project-card"
+        );
+
 
     projectCards.forEach((card) => {
 
@@ -411,32 +543,49 @@ if (window.matchMedia("(pointer: fine)").matches) {
             "mousemove",
             (event) => {
 
+                if (
+                    window.innerWidth < 900
+                ) {
+                    return;
+                }
+
+
                 const rect =
                     card.getBoundingClientRect();
 
+
                 const x =
-                    event.clientX - rect.left;
+                    event.clientX -
+                    rect.left;
+
 
                 const y =
-                    event.clientY - rect.top;
+                    event.clientY -
+                    rect.top;
+
 
                 const centerX =
                     rect.width / 2;
 
+
                 const centerY =
                     rect.height / 2;
 
+
                 const rotateX =
-                    ((y - centerY) / centerY) * -2;
+                    ((y - centerY) /
+                        centerY) *
+                    -2;
+
 
                 const rotateY =
-                    ((x - centerX) / centerX) * 2;
+                    ((x - centerX) /
+                        centerX) *
+                    2;
+
 
                 card.style.transform =
-                    `perspective(1000px)
-                     rotateX(${rotateX}deg)
-                     rotateY(${rotateY}deg)
-                     translateY(-5px)`;
+                    `translateY(-8px) perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
 
             }
         );
@@ -446,275 +595,166 @@ if (window.matchMedia("(pointer: fine)").matches) {
             "mouseleave",
             () => {
 
-                card.style.transform = "";
+                card.style.transform =
+                    "";
 
             }
         );
 
     });
 
-}
 
 
-/* =========================================
-   PROFILE CARD 3D EFFECT
-========================================= */
+    /* =====================================================
+       CONTACT FORM
+    ===================================================== */
 
-const profileCard =
-    document.querySelector(".profile-card");
+    const contactForm =
+        document.getElementById(
+            "contactForm"
+        );
 
-
-if (
-    profileCard &&
-    window.matchMedia("(pointer: fine)").matches
-) {
-
-    profileCard.addEventListener(
-        "mousemove",
-        (event) => {
-
-            const rect =
-                profileCard.getBoundingClientRect();
-
-            const x =
-                event.clientX - rect.left;
-
-            const y =
-                event.clientY - rect.top;
-
-            const centerX =
-                rect.width / 2;
-
-            const centerY =
-                rect.height / 2;
-
-            const rotateX =
-                ((y - centerY) / centerY) * -3;
-
-            const rotateY =
-                ((x - centerX) / centerX) * 3;
-
-            profileCard.style.transform =
-                `perspective(1000px)
-                 rotateX(${rotateX}deg)
-                 rotateY(${rotateY}deg)`;
-
-        }
-    );
+    const formStatus =
+        document.getElementById(
+            "formStatus"
+        );
 
 
-    profileCard.addEventListener(
-        "mouseleave",
-        () => {
+    if (contactForm) {
 
-            profileCard.style.transform =
-                "rotate(3deg)";
+        contactForm.addEventListener(
+            "submit",
+            async (event) => {
 
-        }
-    );
-
-}
+                event.preventDefault();
 
 
-/* =========================================
-   FORMSPREE CONTACT FORM
-========================================= */
-
-if (contactForm) {
-
-    contactForm.addEventListener(
-        "submit",
-        async (event) => {
-
-            event.preventDefault();
-
-
-            if (!submitButton || !formStatus) {
-                return;
-            }
-
-
-            const originalButton =
-                submitButton.innerHTML;
-
-
-            formStatus.textContent = "";
-
-            formStatus.className =
-                "form-status";
-
-
-            submitButton.disabled = true;
-
-            submitButton.innerHTML =
-                '<span>Sending...</span>' +
-                '<i class="fa-solid fa-spinner fa-spin"></i>';
-
-
-            const formData =
-                new FormData(contactForm);
-
-
-            try {
-
-                const response =
-                    await fetch(
-                        contactForm.action,
-                        {
-                            method: "POST",
-
-                            body: formData,
-
-                            headers: {
-                                "Accept":
-                                    "application/json"
-                            }
-                        }
-                    );
-
-
-                if (response.ok) {
+                if (formStatus) {
 
                     formStatus.textContent =
-                        "✓ Message sent successfully! I'll get back to you soon.";
-
-                    formStatus.classList.add(
-                        "success"
-                    );
-
-
-                    submitButton.innerHTML =
-                        '<span>Message Sent</span>' +
-                        '<i class="fa-solid fa-check"></i>';
-
-
-                    contactForm.reset();
-
-
-                    setTimeout(() => {
-
-                        submitButton.innerHTML =
-                            originalButton;
-
-                        submitButton.disabled =
-                            false;
-
-                    }, 4000);
-
-
-                } else {
-
-                    let errorMessage =
-                        "Something went wrong. Please try again.";
-
-
-                    try {
-
-                        const data =
-                            await response.json();
-
-                        if (
-                            data &&
-                            data.errors &&
-                            data.errors.length
-                        ) {
-
-                            errorMessage =
-                                data.errors
-                                    .map(
-                                        (error) =>
-                                            error.message
-                                    )
-                                    .join(" ");
-
-                        }
-
-                    } catch (jsonError) {
-
-                        console.error(
-                            "Formspree response error:",
-                            jsonError
-                        );
-
-                    }
-
-
-                    formStatus.textContent =
-                        `✕ ${errorMessage}`;
-
-                    formStatus.classList.add(
-                        "error"
-                    );
-
-
-                    submitButton.innerHTML =
-                        '<span>Try Again</span>' +
-                        '<i class="fa-solid fa-rotate-right"></i>';
-
-                    submitButton.disabled =
-                        false;
+                        "Sending message...";
 
                 }
 
-            } catch (error) {
 
-                console.error(
-                    "Form submission error:",
-                    error
-                );
-
-
-                formStatus.textContent =
-                    "✕ Connection error. Please check your internet and try again.";
-
-                formStatus.classList.add(
-                    "error"
-                );
+                const formData =
+                    new FormData(
+                        contactForm
+                    );
 
 
-                submitButton.innerHTML =
-                    '<span>Try Again</span>' +
-                    '<i class="fa-solid fa-rotate-right"></i>';
+                try {
 
-                submitButton.disabled =
-                    false;
+                    const response =
+                        await fetch(
+                            contactForm.action,
+                            {
+                                method: "POST",
+                                body: formData,
+                                headers: {
+                                    Accept:
+                                        "application/json"
+                                }
+                            }
+                        );
+
+
+                    if (
+                        response.ok
+                    ) {
+
+                        contactForm.reset();
+
+
+                        if (formStatus) {
+
+                            formStatus.textContent =
+                                "Message sent successfully.";
+
+                        }
+
+                    } else {
+
+                        if (formStatus) {
+
+                            formStatus.textContent =
+                                "Something went wrong. Please try again.";
+
+                        }
+
+                    }
+
+                } catch (error) {
+
+                    if (formStatus) {
+
+                        formStatus.textContent =
+                            "Unable to send message. Please try again.";
+
+                    }
+
+                    console.error(
+                        "Form error:",
+                        error
+                    );
+
+                }
+
+            }
+        );
+
+    }
+
+
+
+    /* =====================================================
+       ESCAPE KEY
+    ===================================================== */
+
+    document.addEventListener(
+        "keydown",
+        (event) => {
+
+            if (
+                event.key ===
+                "Escape"
+            ) {
+
+                if (navMenu) {
+
+                    navMenu.classList.remove(
+                        "open"
+                    );
+
+                }
 
             }
 
         }
     );
 
-}
 
 
-/* =========================================
-   ESCAPE KEY - CLOSE MENU
-========================================= */
+    /* =====================================================
+       RESIZE
+    ===================================================== */
 
-document.addEventListener(
-    "keydown",
-    (event) => {
+    window.addEventListener(
+        "resize",
+        () => {
 
-        if (
-            event.key === "Escape" &&
-            navMenu
-        ) {
+            if (
+                window.innerWidth > 800 &&
+                navMenu
+            ) {
 
-            navMenu.classList.remove("open");
+                navMenu.classList.remove(
+                    "open"
+                );
+
+            }
 
         }
+    );
 
-    }
-);
-
-
-/* =========================================
-   INITIALIZE
-========================================= */
-
-updateScrollProgress();
-updateActiveNav();
-
-console.log(
-    "Portfolio Loaded 🚀 — Hamad Ahmad Ghalib"
-);
+});
